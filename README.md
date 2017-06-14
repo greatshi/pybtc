@@ -9,8 +9,10 @@
 
 更新
 =======
-在dist文件夹中双击 strategy.exe 即可运行，支持 Win7-Win10 32bit&64bit
-<br />使用 py2exe 打包程序
+在dist文件夹中双击 strategy.exe 即可运行，支持 Win7-Win10 32bit & 64bit<br />
+strategy.exe SHA256: `72576b6b1e3a6ccda79c73b92180c0f8f5d0e2b8fdab4d5ff5d029c339527051`<br />
+w9xpopen.exe SHA256: `243c34e56805f87f0254d59826fbab1d062da19308644046a3a92997d86d0bdb`<br />
+使用 py2exe 打包程序
 
 系统需求
 =======
