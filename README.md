@@ -7,6 +7,11 @@
 设定买入、卖出价格，自动循环交易
 实现了网站Python版的API, 可以自己开发交易策略
 
+更新
+=======
+在dist文件夹中双击 strategy.exe 即可运行，支持 Win7-Win10 32bit&64bit
+使用 py2exe 打包程序
+
 系统需求
 =======
 Mac、Linux、Win都可运行
