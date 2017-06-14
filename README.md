@@ -10,7 +10,7 @@
 更新
 =======
 在dist文件夹中双击 strategy.exe 即可运行，支持 Win7-Win10 32bit&64bit
-使用 py2exe 打包程序
+<br />使用 py2exe 打包程序
 
 系统需求
 =======
