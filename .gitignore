@@ -5,6 +5,11 @@
 *.egg
 *.egg-info
 
+# Build
+
+build/
+
+
 # Log:
 *.txt
 .DS_Store
