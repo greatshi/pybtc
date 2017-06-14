@@ -28,6 +28,7 @@ $python strategy.py
 例如
 =======
 采用左侧交易（left），购买比特币（btc），数量（1），买入价（19500），卖出价（21000）
+
 $ python strategy.py
 Ctrl+C to quit!
 side coin amount buy_price sell_price: left btc 1 19500 21000
