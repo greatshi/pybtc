@@ -4,7 +4,6 @@
 *.so
 *.egg
 *.egg-info
-*.gitignore
 
 # Build
 
