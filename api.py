@@ -23,12 +23,22 @@ def manege_keys(i):
 		key = keys.split(" ")[i]
 	return key
 
-def ticker(coin):
-	url = "http://api.btctrade.com/api/ticker?coin="+coin
+def do_get(type, coin):
+	url = "http://api.btctrade.com/api/"+ type +"?coin="+coin
 	req = urllib2.Request(url)
 	response = urllib2.urlopen(req)
-	ticker = eval(response.read())
-	return ticker
+	true = True
+	false = False
+	return eval(response.read())
+
+def ticker(coin):
+	return do_get('ticker', coin)
+
+def depth(coin):
+	return do_get('depth', coin)
+
+def trades(coin):
+	return do_get('trades', coin)
 
 def gen_nonce():
 	return str(int(round(time.time() * 1000)))
@@ -36,8 +46,8 @@ def gen_nonce():
 def signature(wait_sign_string):
 	return hmac.new(hashlib.md5(manege_keys(1)).hexdigest(), wait_sign_string, hashlib.sha256).hexdigest()
 
-def do_post(action, data):
-	url = "http://api.btctrade.com/api/" + action + "/"
+def do_post(type, data):
+	url = "http://api.btctrade.com/api/" + type + "/"
 	data = urllib.urlencode(data)
 	response = urllib2.urlopen(url, data)
 	true = True
@@ -83,7 +93,7 @@ def buy(coin, amount, price):
 	return sell_or_buy('buy', coin, amount, price)
 
 def main():
-	print balance()
+	print "\033[5;32;47m%s\033[0m" %  balance()
 	print ticker('btc')
 	print orders('btc', 'all')
 	print 'test ok! '
