@@ -14,8 +14,7 @@ def get_last_price(coin):
             if last_price != None:
                 break
         except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError):
-            print "error info"
-            pass
+            print "error..."
     return last_price
 
 def test_order_closed(id, seconds):
@@ -29,6 +28,14 @@ def test_order_closed(id, seconds):
         if order_status == 'closed':
             break
     return True
+
+def trusted_fetch_order(id):
+    try:
+        result = api.fetch_order(id)
+        order_status = result['status']
+    except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError):
+        order_status = 'wait'
+    return order_status
 
 def trusted_cancel_order(id):
     while True:
