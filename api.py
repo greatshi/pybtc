@@ -43,47 +43,43 @@ def trades(coin):
 def gen_nonce():
 	return str(int(round(time.time() * 1000)))
 
-def signature(wait_sign_string):
-	return hmac.new(hashlib.md5(manege_keys(1)).hexdigest(), wait_sign_string, hashlib.sha256).hexdigest()
-
 def do_post(type, data):
 	url = "http://api.btctrade.com/api/" + type + "/"
+	keys = []
+	values = []
+	for d in data.split('&'):
+		keys.append(d.split('=')[0])
+		values.append(d.split('=')[1])
+	keys.append('signature')
+	signature = hmac.new(hashlib.md5(manege_keys(1)).hexdigest(), data, hashlib.sha256).hexdigest()
+	values.append(signature)
+	data = OrderedDict(zip(keys,values))
 	data = urllib.urlencode(data)
 	response = urllib2.urlopen(url, data)
 	true = True
 	false = False
-	return eval(response.read())	
+	return eval(response.read())
 
 def balance():	
-	nonce = gen_nonce()
-	wait_sign_string = 'key='+manege_keys(0)+'&nonce='+nonce+'&version=2'
-	data = OrderedDict([('key', manege_keys(0)), ('nonce', nonce), ('version', '2'), ('signature', signature(wait_sign_string))])
+	data = 'key='+manege_keys(0)+'&nonce='+gen_nonce()+'&version=2'
 	return do_post('balance', data)
 
 def orders(coin, type):
-	#coin = 'btc','eth','ltc','doge','ybc'; type = open, closed, cancelled
-	nonce = gen_nonce()
-	wait_sign_string = 'coin='+coin+'&type='+type+'&since=1493695903.525188&ob=ASC&key='+manege_keys(0)+'&nonce='+nonce+'&version=2'
-	data = OrderedDict([('coin', coin), ('type', type), ('since', '1493695903.525188'), ('ob', 'ASC'), ('key', manege_keys(0)), ('nonce', nonce), ('version', '2'), ('signature', signature(wait_sign_string))])
+	data = 'coin='+coin+'&type='+type+'&since=1493695903.525188&ob=ASC&key='+manege_keys(0)+'&nonce='+gen_nonce()+'&version=2'
 	return do_post('orders', data)
 
+def fetch_or_cancel_order(type, id):
+	data = 'id='+id+'&key='+manege_keys(0)+'&nonce='+gen_nonce()+'&version=2'
+	return do_post(type, data)
+
 def fetch_order(id):
-	nonce = gen_nonce()
-	wait_sign_string = 'id='+id+'&key='+manege_keys(0)+'&nonce='+nonce+'&version=2'
-	data = OrderedDict([('id', id), ('key', manege_keys(0)), ('nonce', nonce), ('version', '2'), ('signature', signature(wait_sign_string))])
-	return do_post('fetch_order', data)
+	return fetch_or_cancel_order('fetch_order', id)
 
 def cancel_order(id):
-	nonce = gen_nonce()
-	wait_sign_string = 'id='+id+'&key='+manege_keys(0)+'&nonce='+nonce+'&version=2'
-	data = OrderedDict([('id', id), ('key', manege_keys(0)), ('nonce', nonce), ('version', '2'), ('signature', signature(wait_sign_string))])
-	return do_post('cancel_order', data)
+	return fetch_or_cancel_order('cancel_order', id)
 
 def sell_or_buy(method, coin, amount, price):
-	#method = 'sell','buy'; coin = 'btc','eth','ltc','doge','ybc'; amount = '666'; price = '100000' 
-	nonce = gen_nonce()
-	wait_sign_string = 'coin='+coin+'&amount='+amount+'&price='+price+'&key='+manege_keys(0)+'&nonce='+nonce+'&version=2'
-	data = OrderedDict([('coin', coin), ('amount', amount), ('price', price), ('key', manege_keys(0)), ('nonce', nonce), ('version', '2'), ('signature', signature(wait_sign_string))])
+	data = 'coin='+coin+'&amount='+amount+'&price='+price+'&key='+manege_keys(0)+'&nonce='+gen_nonce()+'&version=2'
 	return do_post(method, data)
 
 def sell(coin, amount, price):

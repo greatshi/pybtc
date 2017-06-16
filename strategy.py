@@ -3,21 +3,21 @@ import sys
 
 def left_side_method(coin, amount, buy_price, sell_price):
     buy_id = trade.trusted_buy(coin, amount, buy_price)
-    print "buying~"
+    print "buying~, id = "+buy_id
     if trade.test_order_closed(buy_id,0.1):
         print "bought~"
         sell_id = trade.trusted_sell(coin, amount, sell_price)
-        print "selling~"
+        print "selling~, id = "+sell_id
         if trade.test_order_closed(sell_id,3):
             return 'A great deal!'
 
 def right_side_method(coin, amount, buy_price, sell_price):
     sell_id = trade.trusted_sell(coin, amount, sell_price)
-    print "selling~"
+    print "selling~, id = "+sell_id
     if trade.test_order_closed(sell_id,0.1):
         print "selled~"
         buy_id = trade.trusted_buy(coin, amount, buy_price)
-        print "buying~"
+        print "buying~, id = "+buy_id
         if trade.test_order_closed(buy_id,3):
             return 'A great deal!'
 
@@ -35,9 +35,9 @@ def simple_side():
     while True:
         print "wait~"
         if side == 'left':
-            left_side_method(coin, amount, buy_price, sell_price)
+            print left_side_method(coin, amount, buy_price, sell_price)
         elif side == 'right':
-            right_side_method(coin, amount, buy_price, sell_price)
+            print right_side_method(coin, amount, buy_price, sell_price)
         else:
             print "error, running again~"
 def main():

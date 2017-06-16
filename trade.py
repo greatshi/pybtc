@@ -1,10 +1,10 @@
+#coding=utf-8
+
 import api
 import time
 import httplib
 import urllib2
 import __main__
-
-import sys
 
 def get_last_price(coin):
     while True:
@@ -21,23 +21,39 @@ def get_last_price(coin):
 def test_order_closed(id, seconds):
     while True:
         try:
-            fetch_order_result = api.fetch_order(id)
-            order_status = fetch_order_result['status']
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError):
+            result = api.fetch_order(id)
+            order_status = result['status']
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError):
             order_status = 'wait...'
-        time.sleep(seconds)
+        time.sleep(seconds) 
         if order_status == 'closed':
             break
     return True
- 
+
+def trusted_cancel_order(id):
+    while True:
+        try:
+            result = api.cancel_order(id)
+            order_result = result['result']
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError):
+            print 'Network Err...'
+        if order_result == True:
+            break
+        elif order_result == False:
+            print result['message']
+    return True
+
 def trusted_sell_or_buy(method, coin, amount, price):
     while True:
+        status = False
         try:
             result = api.sell_or_buy(method, coin, amount, price)
             id = result['id']
             status = result['result']
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError):
-            status = False
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError):
+            print 'Network Err...'
+        except (KeyError):
+            print "Failed, ", result['message']
         if status == True:
             break
     return id
@@ -51,7 +67,5 @@ def trusted_buy(coin, amount, price):
 def main():
     print "just use this~"
 
-
 if __name__ == '__main__':
     main()
-    
