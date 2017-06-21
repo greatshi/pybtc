@@ -12,17 +12,15 @@ w9xpopen.exe SHA256: `243c34e56805f87f0254d59826fbab1d062da19308644046a3a92997d8
 
 系统需求
 =======
-Mac、Linux、Win都可运行
-Win需要安装: Python 2.7
+Mac、Linux、Win都可运行<br />
+Win需要安装: Python 2.7<br />
 
 运行
 =======
-在[btctrade.com](https://www.btctrade.com)申请“获取API认证的公钥和私钥”
-
-在命令行中运行
-$python strategy.py
-
-首次运行需要输入申请的公钥和私钥，所有的输入使用空格分隔
+在[btctrade.com](https://www.btctrade.com)申请“获取API认证的公钥和私钥”<br />
+在命令行中运行<br />
+$python strategy.py<br />
+首次运行需要输入申请的公钥和私钥，所有的输入使用空格分隔<br />
 
 交易参数
 =======
@@ -30,15 +28,29 @@ $python strategy.py
 
 例如
 =======
-采用左侧交易（left），购买比特币（btc），数量（1），买入价（19500），卖出价（21000）
+1. 采用左侧交易（left），购买比特币（btc），数量（1），买入价（19500），卖出价（21000）<br />
 
 $ python strategy.py<br />Ctrl+C to quit!<br />side coin amount buy_price sell_price: `left btc 1 19500 21000`<br />
 
 $ python strategy.py `left btc 1 19500 21000`<br /><br />
 
-采用左侧交易（left），购买比特币（btc），数量（1），浮动比例（0.01），止损比例（0.1）<br />
+2. 采用左侧交易（left），购买比特币（btc），数量（1），浮动比例（0.01），止损比例（0.1）<br />
 $ python 02_strategy.py `left btc 1 0.01 0.1`<br />
 
+3. 自己调用交易函数如下：<br />
+```Python
+import trade
+
+print trade.get_last_price('btc')
+#打印当前 BTC 的价格 
+
+buy_id = trade.trusted_buy('btc', '1', '19500')
+#以19500的价格购买一个 BTC，buy_id 为单号
+
+sell_id = trade.trusted_sell('btc', '1', '37500')
+#以35000的价格出售一个 BTC，sell_id 为单号
+```
+<br />
 演进计划
 =======
 使用神经网络预测价格走势<br />
