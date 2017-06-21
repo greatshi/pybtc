@@ -40,13 +40,13 @@ $ python 02_strategy.py `left btc 1 0.01 0.1`<br />
 import trade
 
 print trade.get_last_price('btc')
-#打印当前 BTC 的价格 
+#打印当前比特币的价格 
 
 buy_id = trade.trusted_buy('btc', '1', '19500')
-#以19500的价格购买一个 BTC，buy_id 为单号
+#以19500的价格购买一个比特币，buy_id 为单号
 
 sell_id = trade.trusted_sell('btc', '1', '37500')
-#以35000的价格出售一个 BTC，sell_id 为单号
+#以37500的价格出售一个比特币，sell_id 为单号
 ```
 
 演进计划
