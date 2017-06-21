@@ -5,9 +5,6 @@
 可以实现自定义币种、价格、数量的左侧交易或右侧交易<br />
 设定买入、卖出价格，自动循环交易<br />
 实现了网站Python版的API, 可以自己开发交易策略<br />
-
-更新
-=======
 在dist文件夹中双击 strategy.exe 即可运行，支持 Win7-Win10 32bit & 64bit<br />
 strategy.exe SHA256: `bd954b185be34a2aca3c31aa988ae3e8100403f072eacfd817a55dca21d91f02`<br />
 w9xpopen.exe SHA256: `243c34e56805f87f0254d59826fbab1d062da19308644046a3a92997d86d0bdb`<br />
@@ -20,7 +17,7 @@ Win需要安装: Python 2.7
 
 运行
 =======
-在btctrade.com申请“获取API认证的公钥和私钥”
+在[btctrade.com](https://www.btctrade.com)申请“获取API认证的公钥和私钥”
 
 在命令行中运行
 $python strategy.py
