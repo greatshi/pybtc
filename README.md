@@ -37,4 +37,8 @@ $ python strategy.py<br />Ctrl+C to quit!<br />side coin amount buy_price sell_p
 $ python strategy.py `left btc 1 19500 21000`<br /><br />
 
 采用左侧交易（left），购买比特币（btc），数量（1），浮动比例（0.01），止损比例（0.1）<br />
-$ python 02_strategy.py `left btc 1 0.01 0.1`
+$ python 02_strategy.py `left btc 1 0.01 0.1`<br />
+
+演进计划
+=======
+使用神经网络预测价格走势<br />
