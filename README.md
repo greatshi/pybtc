@@ -47,7 +47,7 @@ buy_id = trade.trusted_buy('btc', '1', '19500')
 
 sell_id = trade.trusted_sell('btc', '1', '37500')
 #以35000的价格出售一个 BTC，sell_id 为单号
-```<br />
+```
 
 演进计划
 =======
