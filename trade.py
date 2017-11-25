@@ -24,7 +24,7 @@ def test_order_closed(id, seconds):
             order_status = result['status']
         except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError):
             order_status = 'wait...'
-        time.sleep(seconds) 
+        time.sleep(seconds)
         if order_status == 'closed':
             break
     return True

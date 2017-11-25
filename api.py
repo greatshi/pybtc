@@ -1,6 +1,6 @@
 #coding=utf-8
 
-import urllib 
+import urllib
 import urllib2
 import hmac
 import hashlib
@@ -60,7 +60,7 @@ def do_post(type, data):
 	false = False
 	return eval(response.read())
 
-def balance():	
+def balance():
 	data = 'key='+manege_keys(0)+'&nonce='+gen_nonce()+'&version=2'
 	return do_post('balance', data)
 
@@ -89,9 +89,9 @@ def buy(coin, amount, price):
 	return sell_or_buy('buy', coin, amount, price)
 
 def main():
-	print "\033[5;32;47m%s\033[0m" %  balance()
+	# print "\033[5;32;47m%s\033[0m" %  balance()
 	print ticker('btc')
-	print orders('btc', 'all')
+	# print orders('btc', 'all')
 	print 'test ok! '
 
 if __name__ == '__main__':
