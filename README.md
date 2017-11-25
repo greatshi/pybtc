@@ -1,10 +1,11 @@
-<h1>pybtc: 一个自动用于btctrade.com交易的程序</hi>
+<h1>pybtc: 一个自动用于btc等的交易的程序</hi>
 
 功能
 =======
 可以实现自定义币种、价格、数量的左侧交易或右侧交易<br />
 设定买入、卖出价格，自动循环交易<br />
 实现了网站Python版的API, 可以自己开发交易策略<br />
+exe暂不支持coinut
 在dist文件夹中双击 strategy.exe 即可运行，支持 Win7-Win10 32bit & 64bit<br />
 strategy.exe SHA256: `bd954b185be34a2aca3c31aa988ae3e8100403f072eacfd817a55dca21d91f02`<br />
 w9xpopen.exe SHA256: `243c34e56805f87f0254d59826fbab1d062da19308644046a3a92997d86d0bdb`<br />
@@ -18,13 +19,18 @@ Win需要安装: Python 2.7<br />
 运行
 =======
 在[btctrade.com](https://www.btctrade.com)申请“获取API认证的公钥和私钥”<br />
+在[coinut.com](https://coinut.com)申请“REST API Key”<br />
 在命令行中运行<br />
 $python strategy.py<br />
 首次运行需要输入申请的公钥和私钥，所有的输入使用空格分隔<br />
 
 交易参数
 =======
-{left, right} {btc, eth, ltc, doge, ybc} {amount} {price} {price}
+[btctrade](https://www.btctrade.com)<br />
+{left, right} {btc, eth, ltc, doge, ybc} {amount} {price} {price}<br />
+
+[coinut](https://coinut.com)<br />
+{left, right} {BTCUSDT, ETHUSDT, LTCUSDT} {amount} {price} {price}<br />
 
 例如
 =======
