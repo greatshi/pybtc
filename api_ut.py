@@ -57,6 +57,9 @@ def get_spot_trading_instruments(pair = None):
 def get_inst(pair):
 	return get_spot_trading_instruments(pair)['inst_id']
 
+def inst_order_book(pair):
+	return request("inst_order_book", {"inst_id": get_inst(pair), "top_n":10})
+
 def get_account_balance():
 	return request("user_balance")
 
@@ -67,11 +70,11 @@ def new_order(inst_id, side, qty, price = None):
     order = {
         'inst_id': inst_id,
         "side": side,
-        'qty': "%.8f" % qty,
+        'qty': "%.8f" % float(qty),
         'client_ord_id': random.randint(1, 4294967290)
     }
     if price is not None:
-        order['price'] = "%.8f" % price
+        order['price'] = "%.8f" % float(price)
     return order
 
 def submit_orders(ords):
@@ -100,6 +103,7 @@ def main():
 	# print balance()
 	# print get_spot_trading_instruments()
 	# print get_inst('BTCUSDT')
+	# print inst_order_book('LTCUSDT')
 	print 'test ok! '
 
 if __name__ == '__main__':
