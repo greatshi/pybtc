@@ -17,3 +17,5 @@ build/
 .pydevproject
 .settings
 *.pem
+
+.gitignore
