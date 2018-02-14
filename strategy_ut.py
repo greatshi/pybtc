@@ -34,6 +34,7 @@ def simple_side():
         print "{left, right} {BTCUSDT, ETHUSDT, LTCUSDT} {amount} {price} {price}"
         order = raw_input("side pair amount buy_price sell_price:")
         side, pair, amount, buy_price, sell_price = order.split(" ")[0], order.split(" ")[1], order.split(" ")[2], order.split(" ")[3], order.split(" ")[4]
+
     while True:
         print "wait~"
         if side == 'left':

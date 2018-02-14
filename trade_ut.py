@@ -21,7 +21,7 @@ def trusted_get_open_orders(pair, order_id):
     try:
         result = api.get_open_orders(pair)
         order_ids = []
-        for res in result['orders']:
+        for res in result:
             order_ids.append(res['order_id'])
         if order_id in order_ids:
             order_status = 'wait'
@@ -33,17 +33,7 @@ def trusted_get_open_orders(pair, order_id):
 
 def test_order_closed(pair, order_id, seconds):
     while True:
-        try:
-            result = api.get_open_orders(pair)
-            order_ids = []
-            for res in result['orders']:
-                order_ids.append(res['order_id'])
-            if order_id in order_ids:
-                order_status = 'wait'
-            elif order_id not in order_ids:
-                order_status = 'closed'
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError):
-            order_status = 'wait...'
+        order_status = trusted_get_open_orders(pair, order_id)
         time.sleep(seconds)
         if order_status == 'closed':
             break
@@ -51,6 +41,7 @@ def test_order_closed(pair, order_id, seconds):
 
 def trusted_cancel_order(pair, order_id):
     while True:
+        order_result = 'none'
         try:
             result = api.cancel_an_order(pair, order_id)
             order_result = result['reply']
@@ -70,16 +61,16 @@ def trusted_submit_an_order(pair, side, qty, price):
         except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError):
             print 'Network Err...'
         except (KeyError):
-            print 'Failed, ', result['reply']
+            print 'Failed, ', str(status)
         if status == 'order_accepted':
             break
     return order_id
 
 def trusted_sell(pair, qty, ask):
-    return trusted_submit_an_order('SELL', pair, amount, price)
+    return trusted_submit_an_order(pair, 'SELL', qty, ask)
 
 def trusted_buy(pair, qty, bid):
-    return trusted_submit_an_order('BUY', pair, amount, price)
+    return trusted_submit_an_order(pair, 'BUY', qty, bid)
 
 def main():
     print "just use this~"

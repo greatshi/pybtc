@@ -98,7 +98,7 @@ def balance():
 def main():
 	# print ticker('btc')
 	# print balance()
-	# print get_spot_instruments()
+	# print get_spot_trading_instruments()
 	# print get_inst('BTCUSDT')
 	print 'test ok! '
 
