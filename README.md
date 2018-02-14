@@ -1,4 +1,4 @@
-<h1>pybtc: 一个自动用于btc等的交易程序</hi>
+<h1>pybtc: 一个加密货币的自动交易程序</hi>
 
 功能
 =======
@@ -46,7 +46,7 @@ $ python 02_strategy.py `left btc 1 0.01 0.1`<br />
 import trade
 
 print trade.get_last_price('btc')
-#打印当前比特币的价格 
+#打印当前比特币的价格
 
 buy_id = trade.trusted_buy('btc', '1', '19500')
 #以19500的价格购买一个比特币，buy_id 为单号
