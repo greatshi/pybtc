@@ -2,6 +2,7 @@
 
 import trade_ut as trade
 import sys
+import time
 
 def left_side_method(pair, amount, buy_price, sell_price):
     buy_id = trade.trusted_buy(pair, amount, buy_price)
@@ -55,16 +56,15 @@ def auto_right_side(coin, amount, avg_price, earn_ratio, loss_ratio):
     buy_price = str(float(avg_price) * (1 - float(earn_ratio)))
 
     sell_loss_price = str(float(avg_price) * (1 - float(loss_ratio)))
-    # buy_loss_price = str(float(buy_price) * (1 + float(loss_ratio)))
 
     sell_id = trade.trusted_sell(coin, amount, sell_price)
+    sell_time = time.time() + 60
     print "selling~, id = "+str(sell_id)
     while True:
-    	if float(trade.get_last_price(coin.split('USDT')[0])) < float(sell_loss_price):
-    		if trade.trusted_cancel_order(coin, sell_id):
-    			sell_id = trade.trusted_sell(coin, amount, sell_loss_price)
-    			print "stop loss, sell_id = "+str(sell_id)
-    			return "stop loss"
+        last_price = float(trade.get_last_price(coin.split('USDT')[0]))
+    	if ((last_price) < float(sell_loss_price)) or time.time() > sell_time:
+            if trade.trusted_cancel_order(coin, sell_id):
+                return "stop loss or timeout"
     	elif trade.trusted_get_open_orders(coin, sell_id) == 'closed':
     		print "selled~"
     		break
