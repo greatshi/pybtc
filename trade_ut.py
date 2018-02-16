@@ -17,6 +17,18 @@ def get_last_price(coin):
             print "error..."
     return last_price
 
+def get_trades(pair):
+    price = []
+    qty = []
+    timestamp = []
+
+    trades = api.get_market_trades(pair)
+    for trade in trades['trades']:
+        price.append(float(trade['price']))
+        qty.append(float(trade['qty']))
+        timestamp.append(trade['timestamp'])
+    return price, qty, timestamp
+
 def trusted_get_open_orders(pair, order_id):
     try:
         result = api.get_open_orders(pair)
@@ -59,15 +71,14 @@ def trusted_submit_an_order(pair, side, qty, price):
             if type(result) == dict:
                 order_id = result['order_id']
                 status = result['reply']
-            else:
-                print result
+            elif type(result) == list:
+                order_id = result[0]['order']['order_id']
+                status = result[0]['reply']
         except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError):
             print 'Network Err...'
         except (KeyError):
             print 'Failed, ', str(status)
-        # except (TypeError):
-        #     print 'TypeError'
-        if status == 'order_accepted':
+        if status == 'order_accepted' or status == 'order_filled':
             break
     return order_id
 

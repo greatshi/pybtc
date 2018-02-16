@@ -3,18 +3,24 @@
 import trade_ut as trade
 import api_ut as api
 import time
+import matplotlib.pyplot as plt
 
 def test_sell(pair, qty, sell_price):
     sell_id = trade.trusted_sell(pair, qty, sell_price)
     return sell_id
 
-
 def main():
     # BTCUSDT, ETHUSDT, LTCUSDT
+    price, qty, timestamp = trade.get_trades('LTCUSDT')
+    print(len(price))
+    plt.figure()
+    plt.plot(timestamp, price)
+    plt.show()
+
     # sell_id = test_sell('LTCUSDT', '0.0011', '500')
     # print "selling~, id= "+str(sell_id)
-    coin = 'LTCUSDT'
-    print trade.get_last_price(coin.split('USDT')[0])
+    # coin = 'LTCUSDT'
+    # print trade.get_last_price(coin.split('USDT')[0])
     # result = api.get_open_orders('LTCUSDT')
     # for i in result:
     #     print i

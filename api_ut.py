@@ -60,6 +60,9 @@ def get_inst(pair):
 def inst_order_book(pair):
 	return request("inst_order_book", {"inst_id": get_inst(pair), "top_n":10})
 
+def get_market_trades(pair):
+	return request("inst_trade", {"inst_id": get_inst(pair)})
+
 def get_account_balance():
 	return request("user_balance")
 

@@ -17,3 +17,4 @@ build/
 .pydevproject
 .settings
 *.pem
+rnn_predict.py
