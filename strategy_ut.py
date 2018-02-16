@@ -89,11 +89,10 @@ def auto_side():
         order = raw_input("side coin amount earn_ratio loss_ratio:")
         side, coin, amount, earn_ratio, loss_ratio = order.split(" ")[0], order.split(" ")[1], order.split(" ")[2], order.split(" ")[3], order.split(" ")[4]
 
-    avg_price = trade.get_last_price(coin.split('USDT')[0])
-    #use neural network to predict the avg_price
-
     while True:
         print "wait~"
+        avg_price = trade.get_last_price(coin.split('USDT')[0])
+        #use neural network to predict the avg_price
         if side == 'left':
             print auto_left_side(coin, amount, avg_price, earn_ratio, loss_ratio)
         elif side == 'right':

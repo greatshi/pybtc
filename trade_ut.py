@@ -56,12 +56,17 @@ def trusted_submit_an_order(pair, side, qty, price):
         status = False
         try:
             result = api.submit_an_order(pair, side, qty, price)
-            order_id = result['order_id']
-            status = result['reply']
+            if type(result) == dict:
+                order_id = result['order_id']
+                status = result['reply']
+            else:
+                print result
         except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError):
             print 'Network Err...'
         except (KeyError):
             print 'Failed, ', str(status)
+        # except (TypeError):
+        #     print 'TypeError'
         if status == 'order_accepted':
             break
     return order_id
