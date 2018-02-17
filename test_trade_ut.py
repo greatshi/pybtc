@@ -11,11 +11,16 @@ def test_sell(pair, qty, sell_price):
 
 def main():
     # BTCUSDT, ETHUSDT, LTCUSDT
-    price, qty, timestamp = trade.get_trades('LTCUSDT')
-    print(len(price))
-    plt.figure()
-    plt.plot(timestamp, price)
-    plt.show()
+    # price, qty, timestamp = trade.get_trades('LTCUSDT')
+    # print(len(price))
+    # plt.figure()
+    # plt.plot(timestamp, price)
+    # plt.show()
+
+    # test account balances
+    balance = api.get_account_balance()
+    print balance['USDT']
+    print balance['LTC']
 
     # sell_id = test_sell('LTCUSDT', '0.0011', '500')
     # print "selling~, id= "+str(sell_id)
