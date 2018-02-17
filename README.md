@@ -4,8 +4,9 @@
 =======
 可以实现自定义币种、价格、数量的左侧交易或右侧交易<br />
 设定买入、卖出价格，自动循环交易<br />
-实现了网站Python版的API, 可以自己开发交易策略<br />
-exe暂不支持coinut
+实现了网站 Python 版的 API, 可以自己开发交易策略<br />
+exe暂不支持 coinut<br />
+目前只能在 coinut 进行交易(strategy_ut.py)<br />
 在dist文件夹中双击 strategy.exe 即可运行，支持 Win7-Win10 32bit & 64bit<br />
 strategy.exe SHA256: `bd954b185be34a2aca3c31aa988ae3e8100403f072eacfd817a55dca21d91f02`<br />
 w9xpopen.exe SHA256: `243c34e56805f87f0254d59826fbab1d062da19308644046a3a92997d86d0bdb`<br />
@@ -13,7 +14,7 @@ w9xpopen.exe SHA256: `243c34e56805f87f0254d59826fbab1d062da19308644046a3a92997d8
 
 系统需求
 =======
-Mac、Linux、Win都可运行<br />
+Mac、Linux、Win 都可运行<br />
 Win需要安装: Python 2.7<br />
 
 运行
@@ -57,4 +58,5 @@ sell_id = trade.trusted_sell('btc', '1', '37500')
 
 演进计划
 =======
-使用神经网络预测价格走势<br />
+使用神经网络预测价格走势，目前在测试 RNN 代码<br />
+使用 Django 做一个简单的 Web 应用<br />
