@@ -29,6 +29,15 @@ def get_trades(pair):
         timestamp.append(trade['timestamp'])
     return price, qty, timestamp
 
+def trusted_get_account_balance():
+    while True:
+        try:
+            balance = api.get_account_balance()
+            break
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError):
+            pass
+    return balance
+
 def trusted_get_open_orders(pair, order_id):
     try:
         result = api.get_open_orders(pair)

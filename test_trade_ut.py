@@ -18,7 +18,7 @@ def main():
     # plt.show()
 
     # test account balances
-    balance = api.get_account_balance()
+    balance = trade.trusted_get_account_balance()
     print balance['USDT']
     print balance['LTC']
 

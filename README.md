@@ -31,16 +31,16 @@ $python strategy.py<br />
 {left, right} {btc, eth, ltc, doge, ybc} {amount} {price} {price}<br />
 
 [coinut](https://coinut.com)<br />
-{left, right} {BTCUSDT, ETHUSDT, LTCUSDT} {amount} {price} {price}<br />
+{left, right} {BTCUSDT, ETHUSDT, LTCUSDT} {amount_ratio} {price} {price}<br />
 
 例如
 =======
-1. 采用左侧交易（left），购买比特币（btc），数量（1），买入价（19500），卖出价（21000）<br />
-$ python strategy.py<br />Ctrl+C to quit!<br />side coin amount buy_price sell_price: `left btc 1 19500 21000`<br />
-$ python strategy.py `left btc 1 19500 21000`<br /><br />
+1. 采用左侧交易（left），购买比特币（btc），数量比例(0.7)，买入价（19500），卖出价（21000）<br />
+$ python strategy.py<br />Ctrl+C to quit!<br />side coin amount_ratio buy_price sell_price: `left btc 0.7 19500 21000`<br />
+$ python strategy.py `left btc 0.7 19500 21000`<br /><br />
 
-2. 采用左侧交易（left），购买比特币（btc），数量（1），浮动比例（0.01），止损比例（0.1）<br />
-$ python 02_strategy.py `left btc 1 0.01 0.1`<br />
+2. 采用左侧交易（left），购买比特币（btc），数量比例(0.7)，浮动比例（0.01），止损比例（0.1）<br />
+$ python 02_strategy.py `left btc 0.7 0.01 0.1`<br />
 
 3. 自己调用交易函数如下：<br />
 ```Python
