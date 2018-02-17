@@ -71,7 +71,7 @@ def auto_right_side(coin, amount_ratio, avg_price, earn_ratio, loss_ratio):
     		print "selled~"
     		break
 
-    amount = str(float(trade.trusted_get_account_balance()['USDT']) * float(amount_ratio) / buy_price)
+    amount = str(float(trade.trusted_get_account_balance()['USDT']) * float(amount_ratio) / float(buy_price))
     buy_id = trade.trusted_buy(coin, amount, buy_price)
     buy_time = time.time() + 300
     print "buying~, id = "+str(buy_id)
