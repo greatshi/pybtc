@@ -73,7 +73,7 @@ def auto_right_side(coin, amount_ratio, avg_price, earn_ratio, loss_ratio):
 
     amount = str(float(trade.trusted_get_account_balance()['USDT']) * float(amount_ratio) / float(buy_price))
     buy_id = trade.trusted_buy(coin, amount, buy_price)
-    buy_time = time.time() + 300
+    buy_time = time.time() + 1200
     print "buying~, id = "+str(buy_id)
     while True:
         last_price = float(trade.get_last_price(coin.split('USDT')[0]))
@@ -82,7 +82,7 @@ def auto_right_side(coin, amount_ratio, avg_price, earn_ratio, loss_ratio):
                 buy_price = str(float(last_price) * (1 - float(earn_ratio)))
                 amount = (float(trade.trusted_get_account_balance()['USDT']) * float(amount_ratio) / float(buy_price))
                 buy_id = trade.trusted_buy(coin, amount, buy_price)
-                buy_time = time.time() + 60
+                buy_time = time.time() + 300
                 print "buying~, id = "+str(buy_id)
                 print "buy, stop loss or timeout"
     	elif trade.trusted_get_open_orders(coin, buy_id) == 'closed':
