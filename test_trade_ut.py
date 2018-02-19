@@ -3,7 +3,9 @@
 import trade_ut as trade
 import api_ut as api
 import time
+import datetime
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def test_sell(pair, qty, sell_price):
     sell_id = trade.trusted_sell(pair, qty, sell_price)
@@ -18,9 +20,17 @@ def main():
     # plt.show()
 
     # test account balances
-    balance = trade.trusted_get_account_balance()
-    print balance['USDT']
-    print balance['LTC']
+    # balance = trade.trusted_get_account_balance()
+    # print balance['USDT']
+    # print balance['LTC']
+
+    # print time.localtime(start_time)
+    # print time.localtime(end_time)
+
+    ref_ma8=pd.DataFrame(trade.get_candle_ticks('LTCUSDT', 8, 60)['tick']).ix[::,3].mean()
+    ref_ma34=pd.DataFrame(trade.get_candle_ticks('LTCUSDT', 34, 60)['tick']).ix[::,3].mean()
+    print 'ref_ma8: ' + str(ref_ma8) + '　　ref_ma34: ' + str(ref_ma34)
+
 
     # sell_id = test_sell('LTCUSDT', '0.0011', '500')
     # print "selling~, id= "+str(sell_id)

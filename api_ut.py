@@ -25,7 +25,7 @@ def manege_keys(i):
 	return key
 
 def do_get(sec_type, coin):
-	url = "https://api-as.coinut.com/"+sec_type+"/" + coin + "usdt"
+	url = "https://api-na.coinut.com/"+sec_type+"/" + coin + "usdt"
 	response = requests.get(url, timeout=5)
 	return eval(response.content)
 
@@ -34,7 +34,7 @@ def ticker(coin):
 
 
 def request(api, content = {}):
-    url = 'https://api.coinut.com'
+    url = 'https://api-na.coinut.com'
     headers = {}
     content["request"] = api
     content["nonce"] = random.randint(1, 1000000000)
@@ -56,6 +56,9 @@ def get_spot_trading_instruments(pair = None):
 
 def get_inst(pair):
 	return get_spot_trading_instruments(pair)['inst_id']
+
+def candle_ticks(pair, start_time, end_time, interval):
+	return request("candle_ticks", {"inst_id": get_inst(pair), "start_time":start_time, "end_time":end_time, "interval":interval})
 
 def inst_order_book(pair):
 	return request("inst_order_book", {"inst_id": get_inst(pair), "top_n":10})

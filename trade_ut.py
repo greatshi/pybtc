@@ -2,6 +2,7 @@
 
 import api_ut as api
 import time
+import datetime
 import httplib
 import urllib2
 import __main__
@@ -16,6 +17,13 @@ def get_last_price(coin):
         except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError):
             print "error..."
     return last_price
+
+def get_candle_ticks(pair, days, interval):
+    end_time = int(time.time())
+    date_array = datetime.datetime.utcfromtimestamp(end_time)
+    n_day_ago = date_array - datetime.timedelta(days = days)
+    start_time = int(time.mktime(n_day_ago.timetuple()))
+    return api.candle_ticks(pair, start_time, end_time, interval)
 
 def get_trades(pair):
     price = []
