@@ -1,7 +1,7 @@
 #coding=utf-8
 
 import urllib
-# import urllib2
+import urllib2
 import hmac
 import hashlib
 import json
@@ -47,30 +47,33 @@ def request(api, content = {}):
     response = requests.post(url, headers=headers, data=content)
     return eval(response.content)
 
-def get_spot_trading_instruments(pair = None):
+def get_spot_trading_instruments(inst_id = None):
     result = request("inst_list", {'sec_type': 'SPOT'})
-    if pair != None:
-        return result['SPOT'][pair][0]
+    if inst_id != None:
+        return result['SPOT'][inst_id][0]
     else:
         return result['SPOT']
 
 def get_inst(pair):
 	return get_spot_trading_instruments(pair)['inst_id']
 
-def candle_ticks(pair, start_time, end_time, interval):
-	return request("candle_ticks", {"inst_id": get_inst(pair), "start_time":start_time, "end_time":end_time, "interval":interval})
+def inst_tick(inst_id):
+	return request("inst_tick", {"inst_id": inst_id})
 
-def inst_order_book(pair):
-	return request("inst_order_book", {"inst_id": get_inst(pair), "top_n":10})
+def candle_ticks(inst_id, start_time, end_time, interval):
+	return request("candle_ticks", {"inst_id": inst_id, "start_time":start_time, "end_time":end_time, "interval":interval})
 
-def get_market_trades(pair):
-	return request("inst_trade", {"inst_id": get_inst(pair)})
+def inst_order_book(inst_id):
+	return request("inst_order_book", {"inst_id": inst_id, "top_n":10})
+
+def get_market_trades(inst_id):
+	return request("inst_trade", {"inst_id": inst_id})
 
 def get_account_balance():
 	return request("user_balance")
 
-def submit_an_order(pair, side, qty, price = None):
-    return request("new_order", new_order(get_inst(pair), side, qty, price))
+def submit_an_order(inst_id, side, qty, price = None):
+    return request("new_order", new_order(inst_id, side, qty, price))
 
 def new_order(inst_id, side, qty, price = None):
     order = {
@@ -86,19 +89,19 @@ def new_order(inst_id, side, qty, price = None):
 def submit_orders(ords):
     return request("new_orders", {"orders": ords})
 
-def get_open_orders(pair):
-    return request("user_open_orders", {"inst_id": get_inst(pair)})['orders']
+def get_open_orders(inst_id):
+    return request("user_open_orders", {"inst_id": inst_id})['orders']
 
-def cancel_an_order(pair, order_id):
-    return request("cancel_order", {"inst_id": get_inst(pair), "order_id": order_id})
+def cancel_an_order(inst_id, order_id):
+    return request("cancel_order", {"inst_id": inst_id, "order_id": order_id})
 
-def cancel_orders(pair, ids):
-    ords = [{'inst_id': get_inst(pair), 'order_id': x} for x in ids]
+def cancel_orders(inst_id, ids):
+    ords = [{'inst_id': inst_id, 'order_id': x} for x in ids]
     return request("cancel_orders", {'entries': ords})
 
-def cancel_all_orders(pair):
-    ords = get_existing_orders(get_inst(pair))
-    cancel_orders(pair, [x['order_id'] for x in ords])
+def cancel_all_orders(inst_id):
+    ords = get_existing_orders(inst_id)
+    cancel_orders(inst_id, [x['order_id'] for x in ords])
 
 def balance():
 	return request("user_balance")
