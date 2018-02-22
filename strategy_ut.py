@@ -53,14 +53,14 @@ def auto_left_side(pair, amount_ratio, avg_price, earn_ratio, loss_ratio):
 	pass
 
 def auto_right_side(pair, amount_ratio, avg_price, earn_ratio, loss_ratio):
-    inst_id = trade.trusted_get_inst(pair)
+    inst_id = trade.trusted_get_inst(coin)
     sell_price = str(float(avg_price) * (1 + float(earn_ratio)))
     buy_price = str(float(avg_price) * (1 - float(earn_ratio)))
 
     sell_loss_price = str(float(avg_price) * (1 - float(loss_ratio)))
     buy_loss_price = str(float(avg_price) * (1 + float(loss_ratio)))
 
-    amount = str(float(trade.trusted_get_account_balance()['LTC']) * float(amount_ratio))
+    amount = str(float(trade.trusted_get_account_balance()[pair.split('USDT')[0]]) * float(amount_ratio))
     sell_id = trade.trusted_sell(inst_id, amount, sell_price)
     sell_time = time.time() + 300
     print "selling~, id = "+str(sell_id)
