@@ -52,8 +52,32 @@ def stop_loss():
 def auto_left_side(pair, amount_ratio, avg_price, earn_ratio, loss_ratio):
 	pass
 
+def get_average(list):
+	sum = 0
+	for item in list:
+		sum += item
+	return sum/len(list)
+
+def get_ma(inst_id, k_line_time):
+    lines = trade.get_candle_ticks(inst_id, 60, k_line_time)['tick']
+    timestamp = lines[-1][-1]
+    print timestamp
+    pr = []
+    for i in lines:
+        pr.append(i[3])
+    i = -1
+    for p in pr:
+        i += 1
+        if p == 0 and i <= 10:
+            continue
+        elif p == 0:
+            pr[i] = pr[i-1]
+    ref_ma7 = get_average(pr[54:])
+    ref_ma30 = get_average(pr[31:])
+    return ref_ma7, ref_ma30, timestamp
+
 def auto_right_side(pair, amount_ratio, avg_price, earn_ratio, loss_ratio):
-    inst_id = trade.trusted_get_inst(coin)
+    inst_id = trade.trusted_get_inst(pair)
     sell_price = str(float(avg_price) * (1 + float(earn_ratio)))
     buy_price = str(float(avg_price) * (1 - float(earn_ratio)))
 
@@ -62,7 +86,7 @@ def auto_right_side(pair, amount_ratio, avg_price, earn_ratio, loss_ratio):
 
     amount = str(float(trade.trusted_get_account_balance()[pair.split('USDT')[0]]) * float(amount_ratio))
     sell_id = trade.trusted_sell(inst_id, amount, sell_price)
-    sell_time = time.time() + 300
+    sell_time = time.time() + 3600
     print "selling~, id = "+str(sell_id)
     while True:
         last_price = float(trade.get_last_price(pair.split('USDT')[0]))
@@ -75,7 +99,7 @@ def auto_right_side(pair, amount_ratio, avg_price, earn_ratio, loss_ratio):
 
     amount = str(float(trade.trusted_get_account_balance()['USDT']) * float(amount_ratio) / float(buy_price))
     buy_id = trade.trusted_buy(inst_id, amount, buy_price)
-    buy_time = time.time() + 1200
+    buy_time = time.time() + 3600
     print "buying~, id = "+str(buy_id)
     while True:
         last_price = float(trade.get_last_price(pair.split('USDT')[0]))
@@ -84,7 +108,7 @@ def auto_right_side(pair, amount_ratio, avg_price, earn_ratio, loss_ratio):
                 buy_price = str(float(last_price) * (1 - float(earn_ratio)))
                 amount = (float(trade.trusted_get_account_balance()['USDT']) * float(amount_ratio) / float(buy_price))
                 buy_id = trade.trusted_buy(inst_id, amount, buy_price)
-                buy_time = time.time() + 300
+                buy_time = time.time() + 3600
                 print "buying~, id = "+str(buy_id)
                 print "buy, stop loss or timeout"
     	elif trade.trusted_get_open_orders(inst_id, buy_id) == 'closed':
@@ -107,8 +131,13 @@ def auto_side():
 
     while True:
         print "wait~"
-        avg_price = trade.get_last_price(pair.split('USDT')[0])
-        #use neural network to predict the avg_price
+        # avg_price = trade.get_last_price(pair.split('USDT')[0])
+        pair = 'LTCUSDT'
+        inst_id = trade.trusted_get_inst(pair)
+        k_line_time = 3600
+        ref_ma7, ref_ma30, timestamp = get_ma(inst_id, k_line_time)
+        avg_price = ref_ma7
+        # use neural network to predict the avg_price
         if side == 'left':
             print auto_left_side(pair, amount_ratio, avg_price, earn_ratio, loss_ratio)
         elif side == 'right':
