@@ -6,14 +6,15 @@ import datetime
 import httplib
 import urllib2
 import __main__
+import OpenSSL
 
 def trusted_get_inst(pair):
     while True:
     	try:
     		return api.get_inst(pair)
     		break
-    	except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError):
-    		print "error..."
+    	except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError, OpenSSL.SSL.ZeroReturnError):
+    		print "trusted_get_inst error..."
 
 def get_last_price(coin):
     while True:
@@ -22,8 +23,8 @@ def get_last_price(coin):
             last_price = ticker_info['last']
             if last_price != None:
                 break
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError):
-            print "error..."
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError, OpenSSL.SSL.ZeroReturnError):
+            print "get_last_price error..."
     return last_price
 
 def get_realtime_ticks(inst_id):
@@ -31,8 +32,8 @@ def get_realtime_ticks(inst_id):
         try:
             timestamp = int(str(api.inst_tick(inst_id)['timestamp'])[:10])
             return timestamp
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError):
-            print "error..."
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError, OpenSSL.SSL.ZeroReturnError):
+            print "get_realtime_ticks error..."
 
 def get_candle_ticks(inst_id, minutes, interval):
     while True:
@@ -40,8 +41,8 @@ def get_candle_ticks(inst_id, minutes, interval):
             end_time = get_realtime_ticks(inst_id)
             start_time = end_time - minutes*interval
             return api.candle_ticks(inst_id, start_time, end_time, interval)
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError):
-            print "error..."
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError, OpenSSL.SSL.ZeroReturnError):
+            print "get_candle_ticks error..."
 
 def get_trades(inst_id):
     price = []
@@ -60,8 +61,8 @@ def trusted_get_account_balance():
         try:
             balance = api.get_account_balance()
             break
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError):
-            pass
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError, OpenSSL.SSL.ZeroReturnError):
+            print 'trusted_get_account_balance error...'
     return balance
 
 def trusted_get_open_orders(inst_id, order_id):
@@ -74,8 +75,9 @@ def trusted_get_open_orders(inst_id, order_id):
             order_status = 'wait'
         elif order_id not in order_ids:
             order_status = 'closed'
-    except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError):
+    except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError, OpenSSL.SSL.ZeroReturnError):
         order_status = 'wait'
+        print 'trusted_get_open_orders  error...'
     return order_status
 
 def test_order_closed(inst_id, order_id, seconds):
@@ -92,8 +94,8 @@ def trusted_cancel_order(inst_id, order_id):
         try:
             result = api.cancel_an_order(inst_id, order_id)
             order_result = result['reply']
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError):
-            print 'Network Err...'
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError, OpenSSL.SSL.ZeroReturnError):
+            print 'trusted_cancel_order Err...'
         if order_result == 'cancel_order':
             break
     return True
@@ -109,10 +111,10 @@ def trusted_submit_an_order(inst_id, side, qty, price):
             elif type(result) == list:
                 order_id = result[0]['order']['order_id']
                 status = result[0]['reply']
-        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError):
-            print 'Network Err...'
+        except (IOError, httplib.HTTPException, urllib2.HTTPError, urllib2.URLError, KeyError, SyntaxError, OpenSSL.SSL.ZeroReturnError):
+            print 'trusted_submit_an_order Err...'
         except (KeyError):
-            print 'Failed, ', str(status)
+            print 'trusted_submit_an_order err, ', str(status)
         if status == 'order_accepted' or status == 'order_filled':
             break
         elif status == 'order_rejected':
