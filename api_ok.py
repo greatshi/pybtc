@@ -27,13 +27,10 @@ def manege_keys(i):
 	return key
 
 def do_get(sec_type, coin):
-	proxies = {
-	'http':'socks5://user:pass@127.0.0.1:1080',
-	'https':'socks5://user:pass@127.0.0.1:1080'
-	}
 	url = "https://api-na.coinut.com/"+sec_type+"/" + coin + "usd"
+	url = 'https://www.okex.com/api/v1/future_kline.do?symbol=btc_usd&type=1min&contract_type=this_week&size=10000since='+str(int(time.time()))
 	# response = requests.get(url, proxies=proxies, timeout=5)
-	response = requests.get(url, proxies=proxies)
+	response = requests.get(url)
 	return eval(response.content)
 
 def ticker(coin):
@@ -41,18 +38,25 @@ def ticker(coin):
 
 
 def request(api, content = {}):
-    url = 'https://api-na.coinut.com'
-    headers = {}
-    content["request"] = api
-    content["nonce"] = random.randint(1, 1000000000)
-    content = json.dumps(content)
-
-    sig = hmac.new(manege_keys(1), msg=content,
-                   digestmod=hashlib.sha256).hexdigest()
-    headers = {'X-USER': manege_keys(0), "X-SIGNATURE": sig}
-
-    response = requests.post(url, headers=headers, data=content)
-    return eval(response.content)
+	proxies = {
+	'http':'socks5://user:pass@127.0.0.1:1080',
+	'https':'socks5://user:pass@127.0.0.1:1080'
+	}
+	# url = 'https://www.okex.com/api/v1/future_ticker.do'
+	url = 'https://www.okex.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week'
+	headers = {}
+    # content["request"] = api
+    # content["nonce"] = random.randint(1, 1000000000)
+    # content = json.dumps(content)
+	#
+    # sig = hmac.new(manege_keys(1), msg=content,
+    #                digestmod=hashlib.sha256).hexdigest()
+    # headers = {'X-USER': manege_keys(0), "X-SIGNATURE": sig}
+	headers = {'contentType': 'application/x-www-form-urlencoded'}
+	content = {"symbol": 'btc_usd', "contract_type":'this_week'}
+	response = requests.post(url, headers=headers, data=content, proxies=proxies)
+	print response.content
+	return eval(response.content)
 
 def get_spot_trading_instruments(inst_id = None):
     result = request("inst_list", {'sec_type': 'SPOT'})
@@ -115,7 +119,8 @@ def balance():
 
 
 def main():
-	print ticker('btc')
+	klines =  ticker('btc')
+	print len(klines)
 	# print balance()
 	# print get_spot_trading_instruments()
 	# print get_inst('BTCUSDT')

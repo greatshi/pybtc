@@ -145,9 +145,17 @@ def auto_side():
         else:
             print "error, running again~"
 
+def test_api():
+    pair = 'LTCUSD'
+    inst_id = trade.trusted_get_inst(pair)
+    k_line_time = 3600
+    lines = trade.get_candle_ticks(inst_id, 60, k_line_time)['tick']
+    print lines
+
 def main():
     # simple_side()
-    auto_side()
+    # auto_side()
+    test_api()
 
 if __name__ == '__main__':
     main()
