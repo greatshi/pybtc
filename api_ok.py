@@ -9,118 +9,88 @@ import random
 import requests
 import os
 import socket
-import socks
 
-# from collections import OrderedDict
 import httplib
 import time
 
 def manege_keys(i):
 	#i = 0, i = 1
-	if not os.path.exists("ut_api_key.pem"):
-		keys = raw_input("paste keys like this:user api_key")
-		with open('ut_api_key.pem', 'w') as f:
+	if not os.path.exists("ok_api_key.pem"):
+		keys = raw_input("paste keys like this:apiKey secretKey")
+		with open('ok_api_key.pem', 'w') as f:
 			f.write(keys)
-	with open('ut_api_key.pem', 'r') as f:
+	with open('ok_api_key.pem', 'r') as f:
 		keys = f.read()
 		key = keys.split(" ")[i]
 	return key
 
-def do_get(sec_type, coin):
-	url = "https://api-na.coinut.com/"+sec_type+"/" + coin + "usd"
-	url = 'https://www.okex.com/api/v1/future_kline.do?symbol=btc_usd&type=1min&contract_type=this_week&size=10000since='+str(int(time.time()))
-	# response = requests.get(url, proxies=proxies, timeout=5)
-	response = requests.get(url)
+def do_get(sec_type, coin, other=''):
+	url = "https://www.okex.com/api/v1/"+sec_type+"?symbol=" + coin + "_usdt"+other
+	headers = {'contentType': 'application/x-www-form-urlencoded'}
+	response = requests.get(url, headers=headers, timeout=5)
 	return eval(response.content)
 
 def ticker(coin):
-	return do_get('spot', coin)
+	return do_get('ticker.do', coin)
 
+def kline(coin, type, size, since):
+	other = '&type='+type+'&size='+size+'&since='+since
+	return do_get('kline.do', coin, other)
 
-def request(api, content = {}):
-	proxies = {
-	'http':'socks5://user:pass@127.0.0.1:1080',
-	'https':'socks5://user:pass@127.0.0.1:1080'
-	}
-	# url = 'https://www.okex.com/api/v1/future_ticker.do'
-	url = 'https://www.okex.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week'
-	headers = {}
-    # content["request"] = api
-    # content["nonce"] = random.randint(1, 1000000000)
-    # content = json.dumps(content)
-	#
-    # sig = hmac.new(manege_keys(1), msg=content,
-    #                digestmod=hashlib.sha256).hexdigest()
-    # headers = {'X-USER': manege_keys(0), "X-SIGNATURE": sig}
+def request(api, params):
+	url = "https://www.okex.com/api/v1/" + api
 	headers = {'contentType': 'application/x-www-form-urlencoded'}
-	content = {"symbol": 'btc_usd', "contract_type":'this_week'}
-	response = requests.post(url, headers=headers, data=content, proxies=proxies)
-	print response.content
+	sign = ''
+	for key in sorted(params.keys()):
+		sign += key + '=' + str(params[key]) +'&'
+	data = sign+'secret_key='+manege_keys(1)
+	sign = hashlib.md5(data.encode("utf8")).hexdigest().upper()
+	params['sign'] = sign
+
+	response = requests.post(url, headers=headers, data=params)
+
+	true = True
+	false = False
 	return eval(response.content)
 
-def get_spot_trading_instruments(inst_id = None):
-    result = request("inst_list", {'sec_type': 'SPOT'})
-    if inst_id != None:
-        return result['SPOT'][inst_id][0]
-    else:
-        return result['SPOT']
+def userinfo():
+	api = "userinfo.do"
+	params ={'api_key':manege_keys(0)}
+	return request(api, params)
 
-def get_inst(pair):
-	return get_spot_trading_instruments(pair)['inst_id']
+def trade(coin, tradetype, price='', amount=''):
+	api = "trade.do"
+	params = {
+	    'api_key':manege_keys(0),
+		'symbol':coin+'_usdt',
+		'type':tradetype
+	}
+	if price:
+		params['price'] = price
+	if amount:
+		params['amount'] = amount
+	return request(api, params)
 
-def inst_tick(inst_id):
-	return request("inst_tick", {"inst_id": inst_id})
-
-def candle_ticks(inst_id, start_time, end_time, interval):
-	return request("candle_ticks", {"inst_id": inst_id, "start_time":start_time, "end_time":end_time, "interval":interval})
-
-def inst_order_book(inst_id):
-	return request("inst_order_book", {"inst_id": inst_id, "top_n":10})
-
-def get_market_trades(inst_id):
-	return request("inst_trade", {"inst_id": inst_id})
-
-def get_account_balance():
-	return request("user_balance")
-
-def submit_an_order(inst_id, side, qty, price = None):
-    return request("new_order", new_order(inst_id, side, qty, price))
-
-def new_order(inst_id, side, qty, price = None):
-    order = {
-        'inst_id': inst_id,
-        "side": side,
-        'qty': "%.8f" % float(qty),
-        'client_ord_id': random.randint(1, 4294967290)
+def fetch_or_cancel_order(api, coin, id):
+	params = {
+         'api_key':manege_keys(0),
+         'symbol':coin+'_usdt',
+         'order_id':id
     }
-    if price is not None:
-        order['price'] = "%.8f" % float(price)
-    return order
+	return request(api, params)
 
-def submit_orders(ords):
-    return request("new_orders", {"orders": ords})
+def fetch_order(coin, id):
+	api = "order_info.do"
+	return fetch_or_cancel_order(api, coin, id)
 
-def get_open_orders(inst_id):
-    return request("user_open_orders", {"inst_id": inst_id})['orders']
-
-def cancel_an_order(inst_id, order_id):
-    return request("cancel_order", {"inst_id": inst_id, "order_id": order_id})
-
-def cancel_orders(inst_id, ids):
-    ords = [{'inst_id': inst_id, 'order_id': x} for x in ids]
-    return request("cancel_orders", {'entries': ords})
-
-def cancel_all_orders(inst_id):
-    ords = get_existing_orders(inst_id)
-    cancel_orders(inst_id, [x['order_id'] for x in ords])
-
-def balance():
-	return request("user_balance")
+def cancel_order(coin, id):
+	api = "cancel_order.do"
+	return fetch_or_cancel_order(api, coin, id)
 
 
 def main():
-	klines =  ticker('btc')
-	print len(klines)
+
+	# print ticker('btc')['ticker']['last']
 	# print balance()
 	# print get_spot_trading_instruments()
 	# print get_inst('BTCUSDT')
