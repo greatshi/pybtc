@@ -1,7 +1,7 @@
 #coding=utf-8
 
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import hmac
 import hashlib
 import json
@@ -10,13 +10,13 @@ import requests
 import os
 import socket
 
-import httplib
+import http.client
 import time
 
 def manege_keys(i):
 	#i = 0, i = 1
 	if not os.path.exists("ok_api_key.pem"):
-		keys = raw_input("paste keys like this:apiKey secretKey")
+		keys = eval(input("paste keys like this:apiKey secretKey"))
 		with open('ok_api_key.pem', 'w') as f:
 			f.write(keys)
 	with open('ok_api_key.pem', 'r') as f:
@@ -90,12 +90,12 @@ def cancel_order(coin, id):
 
 def main():
 
-	# print ticker('btc')['ticker']['last']
-	# print balance()
-	# print get_spot_trading_instruments()
-	# print get_inst('BTCUSDT')
-	# print inst_order_book('LTCUSDT')
-	print 'test ok! '
+	print(ticker('btc')['ticker']['last'])
+	print(userinfo())
+	# print(get_spot_trading_instruments())
+	# print(get_inst('BTCUSDT'))
+	# print(inst_order_book('LTCUSDT'))
+	print('test ok! ')
 
 if __name__ == '__main__':
 	main()

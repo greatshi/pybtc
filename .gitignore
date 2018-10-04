@@ -8,6 +8,8 @@
 # Build
 
 build/
+temp/
+__pycache__/
 
 
 # Log:
@@ -17,4 +19,3 @@ build/
 .pydevproject
 .settings
 *.pem
-rnn_predict.py
