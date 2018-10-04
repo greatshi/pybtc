@@ -1,7 +1,9 @@
-#coding=utf-8
+# coding=utf-8
 
-import trade_ok as trade
+
 import time
+from pybtc.trade import trade_ok as trade
+
 
 def compute_ma(klines, bars):
     ma_lines = []
@@ -15,6 +17,7 @@ def compute_ma(klines, bars):
     ma_lines.reverse()
     return ma_lines
 
+
 def ma_strategy(coin, type, size, since, ma_s, ma_l, earn_ratio, loss_ratio):
     status = 'selled'
     klines = trade.get_kline(coin, type, size, since)
@@ -26,11 +29,13 @@ def ma_strategy(coin, type, size, since, ma_s, ma_l, earn_ratio, loss_ratio):
             ma_s_lines = compute_ma(klines, ma_s)
             ma_l_lines = compute_ma(klines, ma_l)
             last_price = klines[-2][4]
-            print 'begin_timestamp'+ str(begin_timestamp)
+            print('begin_timestamp: {}'.format(begin_timestamp))
 
             usdt = trade.get_userinfo()['info']['funds']['free']['usdt']
 
-            if (ma_s_lines[-2][1] >= ma_l_lines[-2][1]) and (ma_s_lines[-3][1] < ma_l_lines[-3][1]) and status == 'selled':
+            if ((ma_s_lines[-2][1] >= ma_l_lines[-2][1]) and
+               (ma_s_lines[-3][1] < ma_l_lines[-3][1]) and
+               (status == 'selled')):
                 # buy
                 buy_id = trade.trusted_trade(coin, 'buy_market', usdt, '')
                 status = 'bought'
@@ -40,7 +45,8 @@ def ma_strategy(coin, type, size, since, ma_s, ma_l, earn_ratio, loss_ratio):
             elif status == 'bought':
                 if (trade.trusted_fetch_order(coin, sell_id_ins)['orders'][0]['status'] == 2):
                     status = 'selled'
-                elif(last_price < buy_price*(1-loss_ratio) and status == 'bought'):
+                elif((last_price < buy_price*(1-loss_ratio)) and
+                     (status == 'bought')):
                     # sell stop loss
                     trade.trusted_cancel_order(coin, sell_id_ins)
                     b_num = trade.get_userinfo()['info']['funds']['free'][coin]
@@ -48,6 +54,7 @@ def ma_strategy(coin, type, size, since, ma_s, ma_l, earn_ratio, loss_ratio):
                     status = 'selled'
         else:
             time.sleep(5)
+
 
 def test_ma_strategy(coin, type, size, since, ma_s, ma_l, earn_ratio, loss_ratio):
     status = 'selled'
@@ -62,13 +69,14 @@ def test_ma_strategy(coin, type, size, since, ma_s, ma_l, earn_ratio, loss_ratio
             last_price = klines[-2][4]
 
             usdt = trade.get_userinfo()['info']['funds']['free']['usdt']
-            print 'new timestamp: '+ str(begin_timestamp)
+            print('new timestamp: {}'.format(begin_timestamp))
             print ma_s_lines[-2][0], ma_l_lines[-2][0]
             print ma_s_lines[-3][0], ma_l_lines[-3][0]
             print usdt
 
         else:
             time.sleep(5)
+
 
 def main():
     coin = 'btc'
@@ -83,6 +91,7 @@ def main():
 
     # type = '1min'
     # test_ma_strategy(coin, type, size, since, ma_s, ma_l, earn_ratio, loss_ratio)
+
 
 if __name__ == '__main__':
     main()

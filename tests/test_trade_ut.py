@@ -1,6 +1,10 @@
 #coding=utf-8
 
-import trade_ut as trade
+
+import sys
+sys.path.append('..')
+
+from pybtc.trade import trade_ut as trade
 # import api_ut as api
 # import time
 # import datetime
