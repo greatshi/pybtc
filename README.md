@@ -4,7 +4,7 @@
 架构
 =======
 计划在原有基础上更新版本
-[Architecture](fig/architecture.png)
+![Architecture](fig/architecture.png)
 做成事件驱动版本
 使用RabbitMQ传送事件
 SQLite存储行情信息
