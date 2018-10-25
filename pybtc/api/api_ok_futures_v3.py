@@ -30,6 +30,12 @@ def manege_keys():
     return api_key, secret_key, passphrase
 
 
+def shift_time_v3(timestamp):
+    format = '%Y-%m-%dT%H:%M:%SZ'
+    value = time.localtime(timestamp)
+    return time.strftime(format, value)
+
+
 def request(api, method, params):
     api_key, secret_key, passphrase = manege_keys()
     request_path = api
@@ -98,6 +104,8 @@ def book(instrument_id, size):
 
 
 def candles(instrument_id, start, end, granularity):
+    start = urllib.quote(shift_time_v3(start))
+    end = urllib.quote(shift_time_v3(end))
     params = '?instrument_id={instrument_id}start={start}&end={end}&granularity={granularity}'.format(
              instrument_id=instrument_id, start=start,
              end=end, granularity=granularity)
