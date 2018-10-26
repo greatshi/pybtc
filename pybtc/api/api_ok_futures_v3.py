@@ -152,8 +152,7 @@ def set_leverage(margin_mode, currency, instrument_id,
     return request(api, method, params)
 
 
-def order(instrument_id, type, price, size, margin_mode,
-          match_price, leverage):
+def order(instrument_id, type, price, size, match_price, leverage):
     '''margin_mode: 全仓crossed_mode 逐仓fixed_mode
     '''
     api = "/api/futures/v3/order"
@@ -163,7 +162,7 @@ def order(instrument_id, type, price, size, margin_mode,
         'type': type,
         'price': price,
         'size': size,
-        'margin_mode': margin_mode,
+        # 'margin_mode': margin_mode,
         'match_price': match_price,
         'leverage': leverage
     }

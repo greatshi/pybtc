@@ -60,21 +60,21 @@ def test_order():
     margin_mode = 'fixed_mode'
     match_price = '0'
     leverage = '10'
-    order_dict = trade.order(instrument_id, type, price, size, margin_mode,
-                           match_price, leverage)
+    order_dict = trade.order(instrument_id, type, price, size,
+                             match_price, leverage)
     print(order_dict)
 
 
 def test_cancel_order():
     instrument_id = 'EOS-USD-181228'
-    order_id = '1687208695122945'
+    order_id = '1692899199260672'
     rst = trade.cancel_order(instrument_id, order_id)
     print(rst)
 
 
 def test_orders():
     instrument_id = 'EOS-USD-181228'
-    order_id = '1687208695122945'
+    order_id = '1692899199260672'
     rst = trade.orders(instrument_id, order_id)
     print(rst)
 

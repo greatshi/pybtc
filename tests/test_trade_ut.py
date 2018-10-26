@@ -10,7 +10,7 @@ from pybtc.trade import trade_ut as trade
 # import datetime
 # import matplotlib.pyplot as plt
 # import pandas as pd
-# import logging
+import logging
 
 def test_sell(inst_id, qty, sell_price):
     sell_id = trade.trusted_sell(inst_id, qty, sell_price)

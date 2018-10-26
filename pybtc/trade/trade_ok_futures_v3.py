@@ -82,14 +82,12 @@ def set_leverage(margin_mode, currency, instrument_id,
         time.sleep(1)
 
 
-def order(instrument_id, type, price, size, margin_mode,
-          match_price, leverage):
+def order(instrument_id, type, price, size, match_price, leverage):
     while True:
         status = False
         try:
             result = api.order(instrument_id, type, price,
-                               size, margin_mode,
-                               match_price, leverage)
+                               size, match_price, leverage)
             id = result['order_id']
             status = result['result']
             if (id == -1):
@@ -98,7 +96,7 @@ def order(instrument_id, type, price, size, margin_mode,
             if (result['error_code'] == 0):
                 return id
         except (IOError, httplib.HTTPException, urllib2.HTTPError,
-                urllib2.URLError):
+                urllib2.URLError, KeyError):
             print('order error...')
         if status is True:
             break
@@ -111,13 +109,13 @@ def cancel_order(instrument_id, order_id):
         try:
             result = api.cancel_order(instrument_id, order_id)
             order_result = result['result']
+            if (int(result['order_id']) == int(order_id)):
+                break
+            else:
+                print(result)
         except (IOError, httplib.HTTPException, urllib2.HTTPError,
                 urllib2.URLError, KeyError):
             print('cancel_order error...')
-        if (int(result['order_id']) == int(order_id)):
-            break
-        else:
-            print(result)
     return True
 
 

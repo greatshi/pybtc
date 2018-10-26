@@ -6,9 +6,16 @@ import time
 import pika
 
 
+def get_user_pass():
+    with open('rabbitmq.pem', 'r') as f:
+        rabbit_user = eval(f.read())
+    return rabbit_user
+
+
 def send_event(event_dict):
-    user_name = ''
-    pwd = ''
+    rabbit_user = get_user_pass()
+    user_name = rabbit_user['username']
+    pwd = rabbit_user['passwd']
     credentials = pika.PlainCredentials(user_name, pwd)
     connection = pika.BlockingConnection(
                      pika.ConnectionParameters('127.0.0.1', 5672,
@@ -43,6 +50,7 @@ def okex_futures_quote():
             begin_timestamp = new_timestamp
             event_dict = {
                 'event_type': 'event_bar',
+                'exchange': 'okex_futures',
                 'instrument_id': instrument_id,
                 'bar_type': '3min',
                 'data': candles_bar
