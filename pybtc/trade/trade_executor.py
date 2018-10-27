@@ -71,15 +71,20 @@ def execute_okex_futures(event_dict):
         size = order_dict['amount']
         match_price = order_dict['match_price']
         leverage = order_dict['leverage']
-        order_id = trade.order(instrument_id, type, price, size,
-                               match_price, leverage)
-        print(order_id)
-        time.sleep(3)
-        rst = trade.cancel_order(instrument_id, order_id)
-        print(rst)
-        time.sleep(3)
-        rst = trade.orders(instrument_id, order_id)
-        print(rst)
+        print('execute trade, type: {}, price: {}, size: {}'.format(
+              type, price, size))
+
+        # print(1/0) test process_monitor
+
+        # order_id = trade.order(instrument_id, type, price, size,
+        #                        match_price, leverage)
+        # print(order_id)
+        # time.sleep(3)
+        # rst = trade.cancel_order(instrument_id, order_id)
+        # print(rst)
+        # time.sleep(3)
+        # rst = trade.orders(instrument_id, order_id)
+        # print(rst)
 
 
 def execute_ut(event_dict):

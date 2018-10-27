@@ -34,15 +34,14 @@ def okex_futures_quote():
     instrument_id = 'EOS-USD-181228'
     granularity = 60
     # granularity = 180
-    start = time.time()-granularity*2000
+    start = time.time() - granularity*2000
     end = time.time()
 
     candles_bar = trade.candles(instrument_id, start, end, granularity)
     begin_timestamp = int(candles_bar[-1][0])
 
-    print(begin_timestamp)
     while True:
-        start = time.time()-granularity*2000
+        start = time.time() - granularity*2000
         end = time.time()
         candles_bar = trade.candles(instrument_id, start, end, granularity)
         new_timestamp = int(candles_bar[-1][0])
@@ -56,7 +55,7 @@ def okex_futures_quote():
                 'data': candles_bar
             }
             send_event(event_dict)
-            print('send_event')
+            print('send event_bar')
         time.sleep(3)
 
 

@@ -5,9 +5,6 @@ import time
 import pika
 
 
-status = 'close_long'
-
-
 def get_user_pass():
     with open('rabbitmq.pem', 'r') as f:
         rabbit_user = eval(f.read())
@@ -73,38 +70,81 @@ def strategy(event_dict):
         pass
 
 
+status = 'close_long'
+
+
+def compute_ma(klines, bars):
+    ma_lines = []
+    for i in range(len(klines)-1, bars-1-1, -1):
+        timestamp = klines[i][0]
+        bars_line = klines[i-bars+1:i+1]
+        sum = 0
+        for j in bars_line:
+            sum += j[4]
+        ma_lines.append([timestamp, sum/float(bars)])
+    ma_lines.reverse()
+    return ma_lines
+
+
+def shift_time(timestamp):
+    tz = time.timezone
+    if tz/3600 == 5:
+        timestamp = timestamp + tz + 28800 - 3600
+    format = '%Y-%m-%d %H:%M:%S'
+    value = time.localtime(timestamp)
+    return time.strftime(format, value)
+
+def send_order(instrument_id, price, amount, order_type, match_price):
+    leverage = '10'
+    order_dict = {
+        'instrument_id': instrument_id,
+        'timestamp': time.time(),
+        'price': price,
+        'amount': amount,
+        'order_type': order_type,
+        'match_price': match_price,
+        'leverage': leverage,
+    }
+    event_dict = {
+        'event_type': 'event_send_order',
+        'exchange': 'okex_futures',
+        'instrument_id': instrument_id,
+        'data': order_dict
+    }
+    send_event(event_dict)
+
+
 def future_p_eos(event_dict):
     global status
     instrument_id = event_dict['instrument_id']
     candles_bar = event_dict['data']
-    print(candles_bar[-2])
-    if (status == 'close_long'):
-        print('ooooooo')
-        price = str(float(candles_bar[-2][4])-1.5)
+    ms_s = compute_ma(candles_bar, 7)
+    ms_l = compute_ma(candles_bar, 30)
+    time_now = shift_time(ms_s[-2][0]/1000)
+    print('time: {}, ma_s: {}, ma_l: {}'.format(
+          time_now, ms_s[-2][1], ms_l[-2][1]))
+    if ((status == 'close_long') and
+        (ms_s[-2][1] < ms_l[-2][1]) and
+        (ms_s[-3][1] > ms_l[-3][1])):
+    # if (status == 'close_long'):
+        price = str(float(candles_bar[-2][4]))
         amount = '1'
         order_type = 'going_long'
         match_price = '0'
-        leverage = '10'
-        order_dict = {
-            'instrument_id': instrument_id,
-            'timestamp': time.time(),
-            'price': price,
-            'amount': amount,
-            'order_type': order_type,
-            'match_price': match_price,
-            'leverage': leverage,
-        }
-        event_dict = {
-            'event_type': 'event_send_order',
-            'exchange': 'okex_futures',
-            'instrument_id': instrument_id,
-            'data': order_dict
-        }
-        send_event(event_dict)
+        send_order(instrument_id, price, amount, order_type, match_price)
         status = 'going_long'
-    elif (status == 'going_long'):
+        print('time: {}, status: {}'.format(time_now, status))
+    elif ((status == 'going_long') and
+        (ms_s[-2][1] > ms_l[-2][1]) and
+        (ms_s[-3][1] < ms_l[-3][1])):
+    # elif (status == 'going_long'):
+        price = str(float(candles_bar[-2][4]))
+        amount = '1'
+        order_type = 'close_long'
+        match_price = '0'
+        send_order(instrument_id, price, amount, order_type, match_price)
         status = 'close_long'
-        print('xxxxxxx')
+        print('time: {}, status: {}'.format(time_now, status))
 
 
 def main():
