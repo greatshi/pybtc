@@ -20,10 +20,13 @@ def send_event(event_dict):
     connection = pika.BlockingConnection(
                      pika.ConnectionParameters('127.0.0.1', 5672,
                      '/', credentials))
+
     channel = connection.channel()
-    channel.queue_declare(queue='quote')
-    channel.basic_publish(exchange='',
-                          routing_key='quote',
+    channel.exchange_declare(exchange='quote', exchange_type='fanout')
+
+    # channel.queue_declare(queue='')
+    channel.basic_publish(exchange='quote',
+                          routing_key='',
                           body=str(event_dict))
     connection.close()
 
@@ -32,8 +35,8 @@ def okex_futures_quote():
     from pybtc.trade import trade_ok_futures_v3 as trade
 
     instrument_id = 'EOS-USD-181228'
-    granularity = 60
-    # granularity = 180
+    # granularity = 60
+    granularity = 180
     start = time.time() - granularity*2000
     end = time.time()
 
@@ -55,8 +58,18 @@ def okex_futures_quote():
                 'data': candles_bar
             }
             send_event(event_dict)
-            print('send event_bar')
-        time.sleep(3)
+            # print('send event_bar')
+        event_dict = {
+            'event_type': 'event_tick',
+            'exchange': 'okex_futures',
+            'instrument_id': instrument_id,
+            'tick_type': '',
+            'data': str({'time': time.time(),
+                         'price': candles_bar[-1][4]})
+        }
+        send_event(event_dict)
+        # print('send event_tick')
+        time.sleep(0.3)
 
 
 def main():

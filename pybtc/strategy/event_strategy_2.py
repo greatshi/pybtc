@@ -54,7 +54,7 @@ def listen_event():
 
 
 def callback(ch, method, properties, body):
-    # print('*'*20)
+    # print('2: '+'*'*20)
     event_dict = eval(body)
     strategy(event_dict)
 
@@ -69,18 +69,15 @@ def strategy(event_dict):
         (instrument_id == 'EOS-USD-181228')):
         bar_type = event_dict['bar_type']
         if (bar_type == '3min'):
-            pass
-            # future_p_eos(event_dict)
-            # on_bar()
+            future_p_eos(event_dict)
     elif ((event_type == 'event_tick') and
         (exchange == 'okex_futures') and
         (instrument_id == 'EOS-USD-181228')):
         now = time.time()
         data = eval(event_dict['data'])
-        # print('1: {}, offset: {}'.format(data, now - data['time']))
+        print('2: {}, offset: {}'.format(data, now - data['time']))
         # on_tick()
         pass
-
 
 status = 'close_long'
 
@@ -133,7 +130,7 @@ def future_p_eos(event_dict):
     ms_s = compute_ma(candles_bar, 7)
     ms_l = compute_ma(candles_bar, 30)
     time_now = shift_time(ms_s[-2][0]/1000)
-    print('time: {}, ma_s: {}, ma_l: {}'.format(
+    print('2: time: {}, ma_s: {}, ma_l: {}'.format(
           time_now, ms_s[-2][1], ms_l[-2][1]))
     if ((status == 'close_long') and
         (ms_s[-2][1] < ms_l[-2][1]) and
