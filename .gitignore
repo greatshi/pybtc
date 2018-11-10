@@ -1,6 +1,7 @@
 # Python:
 *.py[cod]
 *bak.py
+*_me.py
 *.so
 *.egg
 *.egg-info
