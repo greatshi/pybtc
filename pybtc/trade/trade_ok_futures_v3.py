@@ -116,7 +116,7 @@ def cancel_order(instrument_id, order_id):
         except (IOError, httplib.HTTPException, urllib2.HTTPError,
                 urllib2.URLError, KeyError):
             print('cancel_order error...')
-    return True
+    return order_result
 
 
 def orders(instrument_id, order_id):
@@ -126,7 +126,10 @@ def orders(instrument_id, order_id):
         except (IOError, httplib.HTTPException, urllib2.HTTPError,
                 urllib2.URLError, KeyError):
             print('cancel_order error...')
-        if (int(result['order_id']) == int(order_id)):
+        try:
+            if (int(result['order_id']) == int(order_id)):
+                break
+        except:
             break
     return result
 
