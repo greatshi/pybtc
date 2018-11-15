@@ -96,7 +96,7 @@ def main():
     # test_position()
     # test_get_leverage()
     # test_set_leverage()
-    # test_order()
+    test_order()
     # test_cancel_order()
     # test_orders()
     print('test pass')

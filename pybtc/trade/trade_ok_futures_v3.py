@@ -90,6 +90,7 @@ def order(instrument_id, type, price, size, match_price, leverage):
         try:
             result = api.order(instrument_id, type, price,
                                size, match_price, leverage)
+            print(result)
             id = result['order_id']
             status = result['result']
             if (id == -1):
