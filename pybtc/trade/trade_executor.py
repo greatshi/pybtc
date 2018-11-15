@@ -74,11 +74,11 @@ def execute_okex_futures(event_dict):
         print('execute trade, type: {}, price: {}, size: {}'.format(
               type, price, size))
 
-        # print(1/0) test process_monitor
+        # print(1/0) test process_monitor error
 
-        # order_id = trade.order(instrument_id, type, price, size,
-        #                        match_price, leverage)
-        # print(order_id)
+        order_id = trade.order(instrument_id, type, price, size,
+                               match_price, leverage)
+        print(order_id)
         # time.sleep(3)
         # rst = trade.cancel_order(instrument_id, order_id)
         # print(rst)

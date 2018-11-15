@@ -20,7 +20,7 @@ def ticker(instrument_id):
             return ticker_info
         except (IOError, httplib.HTTPException, urllib2.HTTPError,
                 urllib2.URLError):
-            print u'ticker error...'
+            print('ticker error...')
     time.sleep(1)
 
 
@@ -38,12 +38,14 @@ def book(instrument_id, size):
 def candles(instrument_id, start, end, granularity):
     while True:
         try:
-            return api.candles(instrument_id, start, end, granularity)
+            candles_ticks = api.candles(instrument_id, start, end, granularity)
+            candles_ticks.reverse()
+            return candles_ticks
         except (IOError, httplib.HTTPException, urllib2.HTTPError,
                 urllib2.URLError, KeyError, SyntaxError,
                 OpenSSL.SSL.ZeroReturnError):
             print('candles error...')
-        time.sleep(1)
+        time.sleep(0.3)
 
 
 def position():

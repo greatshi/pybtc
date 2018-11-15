@@ -7,12 +7,22 @@ sys.path.append('..')
 from pybtc.trade import trade_ok_futures_v3 as trade
 
 
+def shift_time_v3(timestamp):
+    format = '%Y-%m-%dT%H:%M:%SZ'
+    value = time.localtime(timestamp)
+    return time.strftime(format, value)
+
+
 def test_candles():
     instrument_id = 'EOS-USD-181228'
-    granularity = 60
+    granularity = 180
     start = time.time()-granularity*2000
     end = time.time()
-    print(trade.candles(instrument_id, start, end, granularity)[-10:])
+    candles = trade.candles(instrument_id, start, end, granularity)
+    time_now = shift_time_v3(candles[-1][0]/1000)
+    print(len(candles))
+    print(time_now)
+    print(candles[-10:])
 
 
 def test_ticker():
