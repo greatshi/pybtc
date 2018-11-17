@@ -7,7 +7,7 @@ from pybtc.quote import gen_quote
 
 
 def test_gen_quote():
-    gen_quote.okex_futures_quote()
+    gen_quote.main()
 
 
 def main():

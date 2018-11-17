@@ -76,7 +76,7 @@ def strategy(event_dict):
         (instrument_id == 'EOS-USD-181228')):
         now = time.time()
         tick = eval(event_dict['data'])
-        print('1: {}, offset: {}'.format(tick, now - tick['time']))
+        # print('1: {}, offset: {}'.format(tick, now - tick['time']))
         # on_tick()
 
 

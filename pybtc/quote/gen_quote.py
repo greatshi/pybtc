@@ -59,7 +59,7 @@ def okex_futures_quote():
                          'price': candles_bar[-1][4]})
         }
         send_event(event_dict)
-        
+
         new_timestamp = int(candles_bar[-1][0])
         if begin_timestamp < new_timestamp:
             begin_timestamp = new_timestamp
