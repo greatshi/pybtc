@@ -5,16 +5,16 @@ import time
 import pika
 
 
-def get_user_pass():
+def set_user_pass():
+    global rabbit_user
     with open('rabbitmq.pem', 'r') as f:
         rabbit_user = eval(f.read())
-    return rabbit_user
 
 
 def send_event(event_dict):
     '''send event to trade execution module
     '''
-    rabbit_user = get_user_pass()
+    global rabbit_user
     user_name = rabbit_user['username']
     pwd = rabbit_user['passwd']
     credentials = pika.PlainCredentials(user_name, pwd)
@@ -30,7 +30,7 @@ def send_event(event_dict):
 
 
 def listen_event():
-    rabbit_user = get_user_pass()
+    global rabbit_user
     user_name = rabbit_user['username']
     pwd = rabbit_user['passwd']
     credentials = pika.PlainCredentials(user_name, pwd)
@@ -49,12 +49,11 @@ def listen_event():
                           queue=queue_name,
                           no_ack=True)
 
-    print(' [*] waiting for events. to exit press CTRL+C')
+    print(' [*] waiting for quote events...')
     channel.start_consuming()
 
 
 def callback(ch, method, properties, body):
-    # print('*'*20)
     event_dict = eval(body)
     strategy(event_dict)
 
@@ -76,13 +75,9 @@ def strategy(event_dict):
         (exchange == 'okex_futures') and
         (instrument_id == 'EOS-USD-181228')):
         now = time.time()
-        data = eval(event_dict['data'])
-        # print('1: {}, offset: {}'.format(data, now - data['time']))
+        tick = eval(event_dict['data'])
+        print('1: {}, offset: {}'.format(tick, now - tick['time']))
         # on_tick()
-        pass
-
-
-status = 'close_long'
 
 
 def compute_ma(klines, bars):
@@ -105,6 +100,7 @@ def shift_time(timestamp):
     format = '%Y-%m-%d %H:%M:%S'
     value = time.localtime(timestamp)
     return time.strftime(format, value)
+
 
 def send_order(instrument_id, price, amount, order_type, match_price):
     leverage = '10'
@@ -143,7 +139,8 @@ def future_p_eos(event_dict):
         amount = '1'
         order_type = 'going_long'
         match_price = '0'
-        send_order(instrument_id, price, amount, order_type, match_price)
+        print(instrument_id, price, amount, order_type, match_price)
+        # send_order(instrument_id, price, amount, order_type, match_price)
         status = 'going_long'
         print('time: {}, status: {}'.format(time_now, status))
     elif ((status == 'going_long') and
@@ -154,12 +151,16 @@ def future_p_eos(event_dict):
         amount = '1'
         order_type = 'close_long'
         match_price = '0'
-        send_order(instrument_id, price, amount, order_type, match_price)
+        print(instrument_id, price, amount, order_type, match_price)
+        # send_order(instrument_id, price, amount, order_type, match_price)
         status = 'close_long'
         print('time: {}, status: {}'.format(time_now, status))
 
 
 def main():
+    global status
+    status = 'close_long'
+    set_user_pass()
     listen_event()
 
 

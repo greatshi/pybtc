@@ -6,14 +6,15 @@ import time
 import pika
 
 
-def get_user_pass():
+def set_user_pass():
+    global rabbit_user
     with open('rabbitmq.pem', 'r') as f:
         rabbit_user = eval(f.read())
-    return rabbit_user
 
 
-def send_event(event_dict):
-    rabbit_user = get_user_pass()
+def set_channel():
+    global rabbit_user
+    global channel
     user_name = rabbit_user['username']
     pwd = rabbit_user['passwd']
     credentials = pika.PlainCredentials(user_name, pwd)
@@ -23,12 +24,14 @@ def send_event(event_dict):
 
     channel = connection.channel()
     channel.exchange_declare(exchange='quote', exchange_type='fanout')
+    # connection.close()
 
-    # channel.queue_declare(queue='')
+
+def send_event(event_dict):
+    global channel
     channel.basic_publish(exchange='quote',
                           routing_key='',
                           body=str(event_dict))
-    connection.close()
 
 
 def okex_futures_quote():
@@ -47,6 +50,16 @@ def okex_futures_quote():
         start = time.time() - granularity*2000
         end = time.time()
         candles_bar = trade.candles(instrument_id, start, end, granularity)
+        event_dict = {
+            'event_type': 'event_tick',
+            'exchange': 'okex_futures',
+            'instrument_id': instrument_id,
+            'tick_type': '',
+            'data': str({'time': time.time(),
+                         'price': candles_bar[-1][4]})
+        }
+        send_event(event_dict)
+        
         new_timestamp = int(candles_bar[-1][0])
         if begin_timestamp < new_timestamp:
             begin_timestamp = new_timestamp
@@ -58,21 +71,13 @@ def okex_futures_quote():
                 'data': candles_bar
             }
             send_event(event_dict)
-            # print('send event_bar')
-        event_dict = {
-            'event_type': 'event_tick',
-            'exchange': 'okex_futures',
-            'instrument_id': instrument_id,
-            'tick_type': '',
-            'data': str({'time': time.time(),
-                         'price': candles_bar[-1][4]})
-        }
-        send_event(event_dict)
-        # print('send event_tick')
+
         time.sleep(0.3)
 
 
 def main():
+    set_user_pass()
+    set_channel()
     okex_futures_quote()
 
 

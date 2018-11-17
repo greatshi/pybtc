@@ -6,14 +6,15 @@ import time
 import pika
 
 
-def get_user_pass():
+def set_user_pass():
+    global rabbit_user
     with open('rabbitmq.pem', 'r') as f:
         rabbit_user = eval(f.read())
-    return rabbit_user
+    return None
 
 
 def listen_event():
-    rabbit_user = get_user_pass()
+    global rabbit_user
     user_name = rabbit_user['username']
     pwd = rabbit_user['passwd']
     credentials = pika.PlainCredentials(user_name, pwd)
@@ -28,14 +29,12 @@ def listen_event():
                           queue='trade',
                           no_ack=True)
 
-    print(' [*] waiting for events. to exit press CTRL+C')
+    print(' [*] waiting for trading events...')
     channel.start_consuming()
 
 
 def callback(ch, method, properties, body):
-    print('*'*20)
     event_dict = eval(body)
-    # print(event_dict)
     executor(event_dict)
 
 
@@ -92,6 +91,8 @@ def execute_ut(event_dict):
 
 
 def main():
+    set_user_pass()
+    listen_event()
     print('test pass')
 
 

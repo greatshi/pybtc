@@ -5,16 +5,16 @@ import time
 import pika
 
 
-def get_user_pass():
+def set_user_pass():
+    global rabbit_user
     with open('rabbitmq.pem', 'r') as f:
         rabbit_user = eval(f.read())
-    return rabbit_user
 
 
 def send_event(event_dict):
     '''send event to trade execution module
     '''
-    rabbit_user = get_user_pass()
+    global rabbit_user
     user_name = rabbit_user['username']
     pwd = rabbit_user['passwd']
     credentials = pika.PlainCredentials(user_name, pwd)
@@ -30,7 +30,7 @@ def send_event(event_dict):
 
 
 def listen_event():
-    rabbit_user = get_user_pass()
+    global rabbit_user
     user_name = rabbit_user['username']
     pwd = rabbit_user['passwd']
     credentials = pika.PlainCredentials(user_name, pwd)
@@ -49,12 +49,11 @@ def listen_event():
                           queue=queue_name,
                           no_ack=True)
 
-    print(' [*] waiting for events. to exit press CTRL+C')
+    print(' [*] waiting for quote events...')
     channel.start_consuming()
 
 
 def callback(ch, method, properties, body):
-    # print('2: '+'*'*20)
     event_dict = eval(body)
     strategy(event_dict)
 
@@ -157,6 +156,7 @@ def future_p_eos(event_dict):
 
 
 def main():
+    set_user_pass()
     listen_event()
 
 

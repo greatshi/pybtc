@@ -14,19 +14,19 @@ from pybtc.trade import trade_executor
 
 
 def test_gen_quote():
-    gen_quote.okex_futures_quote()
+    gen_quote.main()
 
 
 def test_event_strategy():
-    event_strategy.listen_event()
+    event_strategy.main()
 
 
 def test_event_strategy_2():
-    event_strategy_2.listen_event()
+    event_strategy_2.main()
 
 
 def test_trade_executor():
-    trade_executor.listen_event()
+    trade_executor.main()
 
 
 def process_monitor(process_dict_list):
