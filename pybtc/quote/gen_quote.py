@@ -37,7 +37,7 @@ def send_event(event_dict):
 def okex_futures_quote():
     from pybtc.trade import trade_ok_futures_v3 as trade
 
-    instrument_id = 'EOS-USD-181228'
+    instrument_id = 'EOS-USD-190329'
     # granularity = 60
     granularity = 180
     start = time.time() - granularity*2000

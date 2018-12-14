@@ -65,7 +65,7 @@ def strategy(event_dict):
     instrument_id = event_dict['instrument_id']
     if ((event_type == 'event_bar') and
         (exchange == 'okex_futures') and
-        (instrument_id == 'EOS-USD-181228')):
+        (instrument_id == 'EOS-USD-190329')):
         bar_type = event_dict['bar_type']
         if (bar_type == '3min'):
             pass
@@ -73,7 +73,7 @@ def strategy(event_dict):
             # on_bar()
     elif ((event_type == 'event_tick') and
         (exchange == 'okex_futures') and
-        (instrument_id == 'EOS-USD-181228')):
+        (instrument_id == 'EOS-USD-190329')):
         now = time.time()
         tick = eval(event_dict['data'])
         # print('1: {}, offset: {}'.format(tick, now - tick['time']))

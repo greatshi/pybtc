@@ -65,13 +65,13 @@ def strategy(event_dict):
     instrument_id = event_dict['instrument_id']
     if ((event_type == 'event_bar') and
         (exchange == 'okex_futures') and
-        (instrument_id == 'EOS-USD-181228')):
+        (instrument_id == 'EOS-USD-190329')):
         bar_type = event_dict['bar_type']
         if (bar_type == '3min'):
             future_p_eos(event_dict)
     elif ((event_type == 'event_tick') and
         (exchange == 'okex_futures') and
-        (instrument_id == 'EOS-USD-181228')):
+        (instrument_id == 'EOS-USD-190329')):
         now = time.time()
         data = eval(event_dict['data'])
         print('2: {}, offset: {}'.format(data, now - data['time']))
