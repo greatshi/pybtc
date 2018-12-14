@@ -54,6 +54,8 @@ def execute_okex_futures(event_dict):
         timestamp = order_dict['timestamp']
         # print('time_diff: {}'.format(time.time() - timestamp))
         if (time.time() > timestamp+5):
+            print('{}, order: {}'.format('order 5s late', order_dict))
+        if (time.time() > timestamp+15):
             print('{}, order: {}'.format('order timeout', order_dict))
             return None
         instrument_id = order_dict['instrument_id']
@@ -78,12 +80,6 @@ def execute_okex_futures(event_dict):
         order_id = trade.order(instrument_id, type, price, size,
                                match_price, leverage)
         print(order_id)
-        # time.sleep(3)
-        # rst = trade.cancel_order(instrument_id, order_id)
-        # print(rst)
-        # time.sleep(3)
-        # rst = trade.orders(instrument_id, order_id)
-        # print(rst)
 
 
 def execute_ut(event_dict):
