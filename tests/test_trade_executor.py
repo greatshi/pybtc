@@ -8,7 +8,7 @@ from pybtc.trade import trade_executor
 
 
 def test_trade_executor():
-    trade_executor.listen_event()
+    trade_executor.main()
 
 
 def main():

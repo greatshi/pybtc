@@ -4,6 +4,7 @@
 
 import time
 import pika
+import pymongo
 
 
 def set_user_pass():
@@ -47,6 +48,7 @@ def executor(event_dict):
 
 
 def execute_okex_futures(event_dict):
+    global order_dict_list
     from pybtc.trade import trade_ok_futures_v3 as trade
     event_type = event_dict['event_type']
     if (event_type == 'event_send_order'):
@@ -60,7 +62,9 @@ def execute_okex_futures(event_dict):
             return None
         instrument_id = order_dict['instrument_id']
         order_type = order_dict['order_type']
-        if (order_type == 'going_long'):
+        if (order_type == 'if_done_oco'):
+            return execute_if_done_oco(order_dict)
+        elif (order_type == 'going_long'):
             type = '1'
         elif (order_type == 'going_short'):
             type = '2'
@@ -75,8 +79,6 @@ def execute_okex_futures(event_dict):
         print('execute trade, type: {}, price: {}, size: {}'.format(
               type, price, size))
 
-        # print(1/0) test process_monitor error
-
         order_id = trade.order(instrument_id, type, price, size,
                                match_price, leverage)
         print(order_id)
@@ -84,6 +86,21 @@ def execute_okex_futures(event_dict):
 
 def execute_ut(event_dict):
     pass
+
+
+def execute_if_done_oco(order_dict):
+    try:
+        with open('order_dict_list.txt', 'r') as f:
+            order_dict_list = eval(f.read())
+    except Exception as e:
+        order_dict_list = []
+
+    order_dict_list.append(order_dict)
+
+    with open('order_dict_list.txt', 'w') as f:
+        f.write(str(order_dict_list))
+
+    return None
 
 
 def main():
