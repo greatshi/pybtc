@@ -82,7 +82,10 @@ def trusted_cancel_order(coin, id):
         if order_result is True:
             break
         else:
-            print(result['error_code'])
+            try:
+                print(result['error_code'])
+            except Exception as e:
+                pass
     return True
 
 

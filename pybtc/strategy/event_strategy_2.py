@@ -88,7 +88,7 @@ def compute_ma(klines, bars):
         bars_line = klines[i-bars+1:i+1]
         sum = 0
         for j in bars_line:
-            sum += j[4]
+            sum += float(j[4])
         ma_lines.append([timestamp, sum/float(bars)])
     ma_lines.reverse()
     return ma_lines
@@ -128,7 +128,7 @@ def future_p_eos(event_dict):
     candles_bar = event_dict['data']
     ms_s = compute_ma(candles_bar, 7)
     ms_l = compute_ma(candles_bar, 30)
-    time_now = shift_time(ms_s[-2][0]/1000)
+    time_now = shift_time(float(ms_s[-2][0])/1000)
     print('2: time: {}, ma_s: {}, ma_l: {}'.format(
           time_now, ms_s[-2][1], ms_l[-2][1]))
     if ((status == 'close_long') and

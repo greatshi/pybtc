@@ -128,7 +128,7 @@ def future_p_eos(event_dict):
     candles_bar = event_dict['data']
     ms_s = compute_ma(candles_bar, 7)
     ms_l = compute_ma(candles_bar, 30)
-    time_now = shift_time(ms_s[-2][0]/1000)
+    time_now = ms_s[-2][0]
     print('time: {}, ma_s: {}, ma_l: {}'.format(
           time_now, ms_s[-2][1], ms_l[-2][1]))
     if ((status == 'close_long') and
